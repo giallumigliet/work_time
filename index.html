@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Timer con Cronometro e Undo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f6f8fa;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      color: #222;
+    }
+    button {
+      background-color: #007bff;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      font-size: 17px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 8px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #undo-btn {
+      background-color: #ffc107;
+      color: #333;
+    }
+    #undo-btn:hover {
+      background-color: #d39e00;
+    }
+    #reset-btn {
+      background-color: #dc3545;
+    }
+    #reset-btn:hover {
+      background-color: #a71d2a;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    li {
+      background: white;
+      display: inline-block;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 5px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    #progress-container {
+      margin-top: 40px;
+      position: relative;
+      display: inline-block;
+    }
+    svg {
+      transform: rotate(-90deg);
+    }
+    #progress-bg {
+      stroke: #ddd;
+    }
+    #progress-bar {
+      stroke: #4caf50;
+      transition: stroke-dashoffset 0.5s;
+    }
+    #time-info {
+      position: absolute;
+      top: 55px;
+      left: 0;
+      right: 0;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      transform: rotate(90deg);
+    }
+    #live-timer {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Work Timer ⏱️</h1>
+  <div>
+    <button id="record-btn">Registra orario</button>
+    <button id="undo-btn">Annulla ultimo orario</button>
+    <button id="reset-btn">Reset giornata</button>
+  </div>
+
+  <ul id="times-list"></ul>
+
+  <div id="progress-container">
+    <svg width="150" height="150">
+      <circle id="progress-bg" cx="75" cy="75" r="70" stroke-width="10" fill="none" />
+      <circle
+        id="progress-bar"
+        cx="75"
+        cy="75"
+        r="70"
+        stroke-width="10"
+        fill="none"
+        stroke-dasharray="440"
+        stroke-dashoffset="440"
+      />
+    </svg>
+    <p id="time-info">Premi "Registra orario"</p>
+  </div>
+
+  <div id="live-timer"></div>
+
+  <script>
+    const recordBtn = document.getElementById("record-btn");
+    const undoBtn = document.getElementById("undo-btn");
+    const resetBtn = document.getElementById("reset-btn");
+    const list = document.getElementById("times-list");
+    const timeInfo = document.getElementById("time-info");
+    const progressBar = document.getElementById("progress-bar");
+    const liveTimer = document.getElementById("live-timer");
+
+    let times = JSON.parse(localStorage.getItem("workTimes")) || [];
+    let timerInterval;
+
+    updateUI();
+    startLiveTimer();
+
+    // --- REGISTRA ORARIO ---
+    recordBtn.addEventListener("click", () => {
+      const now = new Date();
+      times.push(now.toISOString());
+      localStorage.setItem("workTimes", JSON.stringify(times));
+      updateUI();
+      startLiveTimer();
+    });
+
+    // --- ANNULLA ULTIMO ORARIO ---
+    undoBtn.addEventListener("click", () => {
+      if (times.length === 0) {
+        alert("Non ci sono orari da annullare!");
+        return;
+      }
+      const removed = times.pop();
+      localStorage.setItem("workTimes", JSON.stringify(times));
+      updateUI();
+      startLiveTimer();
+      const timeStr = new Date(removed).toLocaleTimeString();
+      alert(`Ultimo orario (${timeStr}) annullato ✅`);
+    });
+
+    // --- RESET COMPLETO ---
+    resetBtn.addEventListener("click", () => {
+      if (confirm("Sei sicuro di voler resettare la giornata?")) {
+        times = [];
+        localStorage.removeItem("workTimes");
+        clearInterval(timerInterval);
+        liveTimer.textContent = "";
+        updateUI();
+      }
+    });
+
+    // --- AGGIORNA UI ---
+    function updateUI() {
+      list.innerHTML = "";
+      times.forEach((t, i) => {
+        const li = document.createElement("li");
+        const date = new Date(t);
+        li.textContent = `${i + 1}. ${date.toLocaleTimeString()}`;
+        list.appendChild(li);
+      });
+      calculateWorkTime();
+    }
+
+    // --- CALCOLA TEMPO LAVORATO ---
+    function calculateWorkTime() {
+      if (times.length < 1) {
+        timeInfo.textContent = "Premi il pulsante per registrare l'orario";
+        progressBar.style.strokeDashoffset = 440;
+        return;
+      }
+
+      const parsedTimes = times.map((t) => new Date(t));
+      let workHours = 0;
+
+      if (parsedTimes.length >= 4) {
+        const [start, lunchStart, lunchEnd, end] = parsedTimes;
+        workHours = (end - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+      } else if (parsedTimes.length >= 2) {
+        workHours = (parsedTimes[parsedTimes.length - 1] - parsedTimes[0]) / 1000 / 60 / 60;
+      }
+
+      const fullDay = 8;
+      const remaining = fullDay - workHours;
+      const percent = Math.min(100, (workHours / fullDay) * 100);
+      progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
+
+      if (remaining > 0) {
+        timeInfo.textContent = `Mancano ${remaining.toFixed(2)} ore`;
+      } else {
+        const overtime = Math.abs(remaining * 60).toFixed(0);
+        timeInfo.textContent = `Straordinario: ${overtime} min`;
+      }
+    }
+
+    // --- TIMER IN TEMPO REALE ---
+    function startLiveTimer() {
+      clearInterval(timerInterval);
+      if (times.length === 0) return;
+
+      timerInterval = setInterval(() => {
+        const now = new Date();
+        const parsedTimes = times.map((t) => new Date(t));
+        let workMs = 0;
+
+        if (parsedTimes.length >= 4) {
+          const [start, lunchStart, lunchEnd, end] = parsedTimes;
+          workMs = end - start - (lunchEnd - lunchStart);
+        } else if (parsedTimes.length === 3) {
+          const [start, lunchStart, lunchEnd] = parsedTimes;
+          workMs = now - start - (lunchEnd - lunchStart);
+        } else if (parsedTimes.length === 2) {
+          const [start, lunchStart] = parsedTimes;
+          workMs = now - start;
+        } else if (parsedTimes.length === 1) {
+          workMs = now - parsedTimes[0];
+        }
+
+        const workHours = workMs / 1000 / 60 / 60;
+        const fullDay = 8;
+        const remaining = fullDay - workHours;
+
+        if (remaining > 0) {
+          liveTimer.textContent = `Ore lavorate: ${workHours.toFixed(2)} | Mancano ${remaining.toFixed(2)} ore`;
+        } else {
+          liveTimer.textContent = `Hai superato le 8 ore! +${Math.abs(remaining).toFixed(2)} ore di straordinario`;
+        }
+
+        calculateWorkTime();
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
