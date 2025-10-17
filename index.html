@@ -87,6 +87,13 @@
       font-size: 18px;
       color: #4da6ff;
     }
+    /* --- NEW lunch timer --- */
+    #lunch-timer {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #ffcc00;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -117,6 +124,8 @@
   </div>
 
   <div id="live-timer"></div>
+  <!-- NEW lunch break timer -->
+  <div id="lunch-timer"></div>
 
   <script>
     const recordBtn = document.getElementById("record-btn");
@@ -126,11 +135,13 @@
     const timeInfo = document.getElementById("time-info");
     const progressBar = document.getElementById("progress-bar");
     const liveTimer = document.getElementById("live-timer");
+    const lunchTimer = document.getElementById("lunch-timer"); // NEW
 
     const labels = ["ENTRY", "START LUNCH BREAK", "STOP LUNCH BREAK", "EXIT"];
 
     let times = JSON.parse(localStorage.getItem("workTimes")) || [];
     let timerInterval;
+    let lunchInterval; // NEW
 
     updateUI();
     startLiveTimer();
@@ -157,7 +168,9 @@
         times = [];
         localStorage.removeItem("workTimes");
         clearInterval(timerInterval);
+        clearInterval(lunchInterval); // NEW
         liveTimer.textContent = "";
+        lunchTimer.textContent = ""; // NEW
         updateUI();
         startLiveTimer();
       }
@@ -173,6 +186,22 @@
         li.textContent = `${label}: ${date.toLocaleTimeString()}`;
         list.appendChild(li);
       });
+
+      // NEW — handle lunch timer start/stop
+      clearInterval(lunchInterval);
+      if (times.length === 2) {
+        const lunchStart = new Date(times[1]);
+        lunchInterval = setInterval(() => {
+          const now = new Date();
+          const diffMs = now - lunchStart;
+          const diffMinutes = Math.floor(diffMs / 60000);
+          const h = Math.floor(diffMinutes / 60);
+          const m = diffMinutes % 60;
+          lunchTimer.textContent = `Lunch break: ${h} h ${m} min`;
+        }, 1000);
+      } else {
+        lunchTimer.textContent = "";
+      }
     }
 
     // --- FORMATTATORE TEMPO (ore e minuti) ---
