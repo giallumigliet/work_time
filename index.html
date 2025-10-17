@@ -141,23 +141,17 @@
       times.push(now.toISOString());
       localStorage.setItem("workTimes", JSON.stringify(times));
       const currentLabel = labels[times.length - 1] || "Orario aggiuntivo";
-      alert(`${currentLabel}: ${now.toLocaleTimeString()}`);
       updateUI();
       startLiveTimer();
     });
 
     // --- ANNULLA ULTIMO ORARIO ---
     undoBtn.addEventListener("click", () => {
-      if (times.length === 0) {
-        alert("Non ci sono orari da annullare!");
-        return;
-      }
       const removed = times.pop();
       localStorage.setItem("workTimes", JSON.stringify(times));
       updateUI();
       startLiveTimer();
       const timeStr = new Date(removed).toLocaleTimeString();
-      alert(`Ultimo orario (${timeStr}) annullato ✅`);
     });
 
     // --- RESET COMPLETO ---
