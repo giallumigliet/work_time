@@ -22,7 +22,7 @@
       border: none;
       color: white;
       padding: 12px 20px;
-      font-size: 17px;
+      font-size: 15px;
       border-radius: 6px;
       cursor: pointer;
       margin: 8px;
@@ -41,7 +41,7 @@
       background-color: #6b1619;
     }
     #reset-btn:hover {
-      background-color: #1a75ff;
+      background-color: #400405;
     }
     ul {
       list-style: none;
@@ -80,7 +80,6 @@
       font-size: 18px;
       font-weight: bold;
       text-align: center;
-      transform: rotate(90deg);
       color: #fff;
     }
     #live-timer {
@@ -187,7 +186,7 @@
     // --- CALCOLA TEMPO LAVORATO ---
     function calculateWorkTime() {
       if (times.length < 1) {
-        timeInfo.textContent = "Premi il pulsante per registrare l'orario";
+        timeInfo.textContent = "PRESS the button to register the time";
         progressBar.style.strokeDashoffset = 440;
         return { workHours: 0, remaining: 8 };
       }
