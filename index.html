@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Work Timer con Cronometro e Undo</title>
+  <title>Work Timer con etichette orari</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -113,7 +113,7 @@
         stroke-dashoffset="440"
       />
     </svg>
-    <p id="time-info">Premi "Registra orario"</p>
+    <p id="time-info">Premi il pulsante per registrare l'orario</p>
   </div>
 
   <div id="live-timer"></div>
@@ -127,6 +127,8 @@
     const progressBar = document.getElementById("progress-bar");
     const liveTimer = document.getElementById("live-timer");
 
+    const labels = ["Ingresso", "Inizio pausa pranzo", "Fine pausa pranzo", "Uscita"];
+
     let times = JSON.parse(localStorage.getItem("workTimes")) || [];
     let timerInterval;
 
@@ -138,6 +140,8 @@
       const now = new Date();
       times.push(now.toISOString());
       localStorage.setItem("workTimes", JSON.stringify(times));
+      const currentLabel = labels[times.length - 1] || "Orario aggiuntivo";
+      alert(`${currentLabel}: ${now.toLocaleTimeString()}`);
       updateUI();
       startLiveTimer();
     });
@@ -173,7 +177,8 @@
       times.forEach((t, i) => {
         const li = document.createElement("li");
         const date = new Date(t);
-        li.textContent = `${i + 1}. ${date.toLocaleTimeString()}`;
+        const label = labels[i] || "Orario aggiuntivo";
+        li.textContent = `${label}: ${date.toLocaleTimeString()}`;
         list.appendChild(li);
       });
       calculateWorkTime();
