@@ -197,10 +197,12 @@
       if (parsedTimes.length >= 4) {
         const [start, lunchStart, lunchEnd, end] = parsedTimes;
         workHours = (end - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
-      } else if (parsedTimes.length >= 2) {
-        workHours = (parsedTimes[parsedTimes.length - 1] - parsedTimes[0]) / 1000 / 60 / 60;
+      } else if (parsedTimes.length == 3) {
+        workHours = (new Date() - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+      } else if (parsedTimes.length === 2) {
+        workHours = (lunchStart - start) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
-        workHours = (new Date() - parsedTimes[0]) / 1000 / 60 / 60;
+        workHours = (new Date() - start) / 1000 / 60 / 60;
       }
 
       const fullDay = 8;
@@ -209,7 +211,7 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        timeInfo.textContent = `Left to do: ${formatHours(remaining)}`;
+        timeInfo.textContent = `To do: ${formatHours(remaining)}`;
       } else {
         timeInfo.textContent = `Overtime: ${formatHours(-remaining)}`;
       }
@@ -224,7 +226,7 @@
         const { workHours, remaining } = calculateWorkTime();
         if (workHours > 0) {
           if (remaining > 0) {
-            liveTimer.textContent = `Worked: ${formatHours(workHours)} | Remaining: ${formatHours(remaining)}`;
+            liveTimer.textContent = `Worked: ${formatHours(workHours)} | To do: ${formatHours(remaining)}`;
           } else {
             liveTimer.textContent = `You are over 8 hours! +${formatHours(-remaining)} of overtime`;
           }
