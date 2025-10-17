@@ -250,9 +250,9 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        timeInfo.textContent = `To do: ${formatHours(remaining)}`;
+        timeInfo.textContent = `To do: \n${formatHours(remaining)}`;
       } else {
-        timeInfo.textContent = `Overtime: ${formatHours(-remaining)}`;
+        timeInfo.textContent = `Overtime: \n${formatHours(-remaining)}`;
       }
 
       return { workHours, remaining };
