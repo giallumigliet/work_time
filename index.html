@@ -223,15 +223,20 @@
       const parsedTimes = times.map((t) => new Date(t));
       let workHours = 0;
 
+      const start = parsedTimes[0];
+      const lunchStart = parsedTimes[1];
+      const lunchEnd = parsedTimes[2];
+      const end = parsedTimes[3];
+      const now = new Date();
+
       if (parsedTimes.length >= 4) {
-        const [start, lunchStart, lunchEnd, end] = parsedTimes;
         workHours = (end - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
-      } else if (parsedTimes.length == 3) {
-        workHours = (new Date() - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+      } else if (parsedTimes.length === 3) {
+        workHours = (now - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 2) {
         workHours = (lunchStart - start) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
-        workHours = (new Date() - start) / 1000 / 60 / 60;
+        workHours = (now - start) / 1000 / 60 / 60;
       }
 
       const fullDay = 8;
