@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Work Timer ⏱️</title>
+  <title>WORK TIMER ⏱️</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,7 +38,7 @@
       background-color: #42a5f5;
     }
     #reset-btn {
-      background-color: #0d6efd;
+      background-color: #6b1619;
     }
     #reset-btn:hover {
       background-color: #1a75ff;
@@ -86,7 +86,6 @@
     #live-timer {
       margin-top: 20px;
       font-size: 22px;
-      font-weight: bold;
       color: #4da6ff;
     }
   </style>
@@ -211,9 +210,9 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        timeInfo.textContent = `Mancano ${formatHours(remaining)}`;
+        timeInfo.textContent = `Left to do: ${formatHours(remaining)}`;
       } else {
-        timeInfo.textContent = `Straordinario: ${formatHours(-remaining)}`;
+        timeInfo.textContent = `Overtime: ${formatHours(-remaining)}`;
       }
 
       return { workHours, remaining };
@@ -226,9 +225,9 @@
         const { workHours, remaining } = calculateWorkTime();
         if (workHours > 0) {
           if (remaining > 0) {
-            liveTimer.textContent = `Ore lavorate: ${formatHours(workHours)} | Mancano ${formatHours(remaining)}`;
+            liveTimer.textContent = `Worked: ${formatHours(workHours)} | Remaining: ${formatHours(remaining)}`;
           } else {
-            liveTimer.textContent = `Hai superato le 8 ore! +${formatHours(-remaining)} di straordinario`;
+            liveTimer.textContent = `You are over 8 hours! +${formatHours(-remaining)} of overtime`;
           }
         } else {
           liveTimer.textContent = "";
