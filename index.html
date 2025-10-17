@@ -90,11 +90,11 @@
   </style>
 </head>
 <body>
-  <h1>Work Timer ⏱️</h1>
+  <h1>WORK TIMER ⏱️</h1>
   <div>
-    <button id="record-btn">Registra orario</button>
-    <button id="undo-btn">Annulla ultimo orario</button>
-    <button id="reset-btn">Reset giornata</button>
+    <button id="record-btn">Register time</button>
+    <button id="undo-btn">Cancel last time</button>
+    <button id="reset-btn">Reset day</button>
   </div>
 
   <ul id="times-list"></ul>
@@ -113,7 +113,7 @@
         stroke-dashoffset="440"
       />
     </svg>
-    <p id="time-info">Premi il pulsante per registrare l'orario</p>
+    <p id="time-info">Press button to register the time</p>
   </div>
 
   <div id="live-timer"></div>
@@ -127,7 +127,7 @@
     const progressBar = document.getElementById("progress-bar");
     const liveTimer = document.getElementById("live-timer");
 
-    const labels = ["Ingresso", "Inizio pausa pranzo", "Fine pausa pranzo", "Uscita"];
+    const labels = ["ENTRY", "START LUNCH BREAK", "END LUNCH BREAK", "EXIT"];
 
     let times = JSON.parse(localStorage.getItem("workTimes")) || [];
     let timerInterval;
