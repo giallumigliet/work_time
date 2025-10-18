@@ -85,6 +85,7 @@
       font-size: 18px;
       font-weight: bold;
       text-align: center;
+      white-space: pre-line;
       color: #fff;
     }
     #live-timer {
@@ -250,9 +251,9 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        timeInfo.textContent = `To do: <br> ${formatHours(remaining)}`;
+        timeInfo.textContent = `To do: \n${formatHours(remaining)}`;
       } else {
-        timeInfo.textContent = `Overtime: <br> ${formatHours(-remaining)}`;
+        timeInfo.textContent = `Overtime: \n${formatHours(-remaining)}`;
       }
 
       return { workHours, remaining };
