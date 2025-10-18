@@ -163,14 +163,16 @@
     // --- ANNULLA ULTIMO ORARIO ---
     undoBtn.addEventListener("click", () => {
       if (times.length === 0) return;
-      times.pop();
-      localStorage.setItem("workTimes", JSON.stringify(times));
-      updateUI();
+      if (confirm("Press OK to delete last registered time.")) {
+        times.pop();
+        localStorage.setItem("workTimes", JSON.stringify(times));
+        updateUI();
+      }
     });
 
     // --- RESET COMPLETO ---
     resetBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to reset the day?")) {
+      if (confirm("Press OK to reset the day.")) {
         times = [];
         localStorage.removeItem("workTimes");
         clearInterval(timerInterval);
