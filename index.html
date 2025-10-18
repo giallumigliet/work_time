@@ -251,8 +251,10 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
+        progressBar.style.stroke = "#00bfff"; 
         timeInfo.textContent = `To do: \n${formatHours(remaining)}`;
       } else {
+        progressBar.style.stroke = "#ff4444"; 
         timeInfo.textContent = `Overtime: \n${formatHours(-remaining)}`;
       }
 
@@ -266,8 +268,10 @@
         const { workHours, remaining } = calculateWorkTime();
         if (workHours > 0) {
           if (remaining > 0) {
+            liveTimer.style.color = "#4da6ff";
             liveTimer.textContent = `Worked: ${formatHours(workHours)}`;
           } else {
+            liveTimer.style.color = "#ff4444"; 
             liveTimer.textContent = `You are over 8 hours! +${formatHours(-remaining)} of overtime`;
           }
         } else {
