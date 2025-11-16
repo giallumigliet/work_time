@@ -93,7 +93,6 @@
       font-size: 18px;
       color: #4da6ff;
     }
-    /* --- NEW lunch timer --- */
     #lunch-timer {
       margin-top: 10px;
       font-size: 16px;
@@ -130,7 +129,6 @@
   </div>
 
   <div id="live-timer"></div>
-  <!-- NEW lunch break timer -->
   <div id="lunch-timer"></div>
 
   <script>
@@ -141,18 +139,17 @@
     const timeInfo = document.getElementById("time-info");
     const progressBar = document.getElementById("progress-bar");
     const liveTimer = document.getElementById("live-timer");
-    const lunchTimer = document.getElementById("lunch-timer"); // NEW
+    const lunchTimer = document.getElementById("lunch-timer");
 
     const labels = ["ENTRY", "START LUNCH BREAK", "STOP LUNCH BREAK", "EXIT"];
 
     let times = JSON.parse(localStorage.getItem("workTimes")) || [];
     let timerInterval;
-    let lunchInterval; // NEW
+    let lunchInterval;
 
     updateUI();
     startLiveTimer();
 
-    // --- REGISTRA ORARIO ---
     recordBtn.addEventListener("click", () => {
       const now = new Date();
       times.push(now.toISOString());
@@ -160,7 +157,6 @@
       updateUI();
     });
 
-    // --- ANNULLA ULTIMO ORARIO ---
     undoBtn.addEventListener("click", () => {
       if (times.length === 0) return;
       if (confirm("Press OK to delete last registered time.")) {
@@ -170,21 +166,19 @@
       }
     });
 
-    // --- RESET COMPLETO ---
     resetBtn.addEventListener("click", () => {
       if (confirm("Press OK to reset the day.")) {
         times = [];
         localStorage.removeItem("workTimes");
         clearInterval(timerInterval);
-        clearInterval(lunchInterval); // NEW
+        clearInterval(lunchInterval);
         liveTimer.textContent = "";
-        lunchTimer.textContent = ""; // NEW
+        lunchTimer.textContent = "";
         updateUI();
         startLiveTimer();
       }
     });
 
-    // --- AGGIORNA UI ---
     function updateUI() {
       list.innerHTML = "";
       times.forEach((t, i) => {
@@ -195,8 +189,8 @@
         list.appendChild(li);
       });
 
-      // NEW — handle lunch timer start/stop
       clearInterval(lunchInterval);
+
       if (times.length === 2) {
         const lunchStart = new Date(times[1]);
         lunchInterval = setInterval(() => {
@@ -212,7 +206,6 @@
       }
     }
 
-    // --- FORMATTATORE TEMPO (ore e minuti) ---
     function formatHours(hoursFloat) {
       const totalMinutes = Math.abs(hoursFloat * 60);
       const h = Math.floor(totalMinutes / 60);
@@ -220,7 +213,6 @@
       return `${h} h ${m} min`;
     }
 
-    // --- CALCOLA TEMPO LAVORATO ---
     function calculateWorkTime() {
       if (times.length < 1) {
         timeInfo.textContent = "PRESS the button to register the time";
@@ -238,9 +230,13 @@
       const now = new Date();
 
       if (parsedTimes.length >= 4) {
-        workHours = (end - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+        let rawLunchMs = lunchEnd - lunchStart;
+        let lunchMs = Math.max(rawLunchMs, 30 * 60 * 1000);
+        workHours = (end - start - lunchMs) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 3) {
-        workHours = (now - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+        let rawLunchMs = lunchEnd - lunchStart;
+        let lunchMs = Math.max(rawLunchMs, 30 * 60 * 1000);
+        workHours = (now - start - lunchMs) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 2) {
         workHours = (lunchStart - start) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
@@ -263,15 +259,16 @@
       return { workHours, remaining };
     }
 
-    // --- TIMER LIVE E PROGRESS BAR ---
     function startLiveTimer() {
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
         const { workHours, remaining } = calculateWorkTime();
+
         if (workHours > 0) {
           if (remaining > 0) {
+            const exitTime = new Date(Date.now() + remaining * 60 * 60 * 1000);
             liveTimer.style.color = "#4da6ff";
-            liveTimer.textContent = `Worked: ${formatHours(workHours)}`;
+            liveTimer.textContent = `Expected exit time: ${exitTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
           } else {
             liveTimer.style.color = "#ff4444"; 
             liveTimer.textContent = `You are over 8 hours! +${formatHours(-remaining)} of overtime`;
