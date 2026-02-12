@@ -236,11 +236,13 @@
       const lunchEnd = parsedTimes[2];
       const end = parsedTimes[3];
       const now = new Date();
+      const minLunchDuration = 30 * 60 * 1000;
+      
 
       if (parsedTimes.length >= 4) {
-        workHours = (end - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+        workHours = (end - start - Math.max((lunchEnd - lunchStart), minLunchDuration)) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 3) {
-        workHours = (now - start - (lunchEnd - lunchStart)) / 1000 / 60 / 60;
+        workHours = (now - start - Math.max((lunchEnd - lunchStart), minLunchDuration)) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 2) {
         workHours = (lunchStart - start) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
@@ -249,16 +251,18 @@
 
       const fullDay = 8;
       const remaining = fullDay - workHours;
-      const exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
-      const exitTimeFormatted = exitTime.toLocaleTimeString('it-IT', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
+      
       const percent = Math.min(100, (workHours / fullDay) * 100);
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
+        const exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
+        const exitTimeFormatted = exitTime.toLocaleTimeString('it-IT', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+        
         progressBar.style.stroke = "#00bfff"; 
         timeInfo.textContent = `Exit time: \n${exitTimeFormatted}`;
       } else {
