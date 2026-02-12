@@ -250,12 +250,17 @@
       const fullDay = 8;
       const remaining = fullDay - workHours;
       const exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
+      const exitTimeFormatted = exitTime.toLocaleTimeString('it-IT', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
       const percent = Math.min(100, (workHours / fullDay) * 100);
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
         progressBar.style.stroke = "#00bfff"; 
-        timeInfo.textContent = `Exit time: \n${formatHours(exitTime)}`;
+        timeInfo.textContent = `Exit time: \n${exitTimeFormatted}`;
       } else {
         progressBar.style.stroke = "#ff4444"; 
         timeInfo.textContent = `Overtime: \n${formatHours(-remaining)}`;
