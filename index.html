@@ -249,12 +249,13 @@
 
       const fullDay = 8;
       const remaining = fullDay - workHours;
+      const exitTime = remaining + now;
       const percent = Math.min(100, (workHours / fullDay) * 100);
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
         progressBar.style.stroke = "#00bfff"; 
-        timeInfo.textContent = `To do: \n${formatHours(remaining)}`;
+        timeInfo.textContent = `Exit time: \n${formatHours(exitTime)}`;
       } else {
         progressBar.style.stroke = "#ff4444"; 
         timeInfo.textContent = `Overtime: \n${formatHours(-remaining)}`;
