@@ -11,7 +11,9 @@ It allows you to log your start time, lunch break, and finish time, while showin
 - ENTRY → Clock-in at work  
 - START LUNCH BREAK → Start your lunch break  
 - STOP LUNCH BREAK → End your lunch break  
-- EXIT → Clock-out after work  
+- EXIT → Clock-out after work
+
+NOTE: lunch break lasts at least 30 minutes, as stated by italian law.
 
 ✅ **Automatic work time calculation**
 - A **circular progress bar** fills up as you work during the day.  
