@@ -244,19 +244,19 @@
       } else if (parsedTimes.length === 3) {
         workHours = (now - start - Math.max((lunchEnd - lunchStart), minLunchDuration)) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 2) {
-        workHours = (lunchStart - start - minLunchDuration) / 1000 / 60 / 60;
+        workHours = (lunchStart - start) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
-        workHours = (now - start - minLunchDuration) / 1000 / 60 / 60;
+        workHours = (now - start) / 1000 / 60 / 60;
       }
 
-      const fullDay = 8.5;
-      const remaining = fullDay - workHours;
+      const fullDay = 8;
+      const remaining = fullDay - workHours ;
       
       const percent = Math.min(100, (workHours / fullDay) * 100);
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        const exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
+        const exitTime = new Date(now.getTime() + (remaining + Math.max((lunchEnd - lunchStart), minLunchDuration)) * 60 * 60 * 1000);
         const exitTimeFormatted = exitTime.toLocaleTimeString('it-IT', {
           hour: '2-digit',
           minute: '2-digit',
