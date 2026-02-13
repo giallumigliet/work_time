@@ -239,10 +239,9 @@
       const now = new Date();
       
       const minLunchDuration = 30 * 60 * 1000;
-      let lunchDuration =  lunchEnd - lunchStart;
-      
-      if (lunchDuration < minLunchDuration){ 
-        lunchDuration = minLunchDuration;
+      let lunchDuration = minLunchDuration; 
+      if (parsedTimes.length >= 3 && (lunchDuration > minLunchDuration)) {
+        lunchDuration = lunchEnd - lunchStart;
       }
 
       if (parsedTimes.length >= 4) {
