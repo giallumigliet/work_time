@@ -265,7 +265,13 @@
       progressBar.style.strokeDashoffset = 440 - (440 * percent) / 100;
 
       if (remaining > 0) {
-        const exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
+        let exitTime;
+          
+        if (parsedTimes.length < 3) {
+          exitTime = new Date(now.getTime() + (remaining + lunchDuration / 1000 / 60 / 60) * 60 * 60 * 1000);
+        } else {
+          exitTime = new Date(now.getTime() + remaining * 60 * 60 * 1000);
+        }
         const exitTimeFormatted = exitTime.toLocaleTimeString('it-IT', {
           hour: '2-digit',
           minute: '2-digit',
