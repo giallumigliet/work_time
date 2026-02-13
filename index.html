@@ -240,8 +240,9 @@
       const minLunchDuration = 30 * 60 * 1000;
       const lunchDuration =  (lunchEnd - lunchStart), minLunchDuration)
       
-      if (lunchDuration < minLunchDuration) lunchDuration = minLunchDuration;
-      
+      if (lunchDuration < minLunchDuration){ 
+        lunchDuration = minLunchDuration;
+      }
 
       if (parsedTimes.length >= 4) {
         workHours = (end - start - lunchDuration) / 1000 / 60 / 60;
