@@ -244,12 +244,12 @@
       } else if (parsedTimes.length === 3) {
         workHours = (now - start - Math.max((lunchEnd - lunchStart), minLunchDuration)) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 2) {
-        workHours = (lunchStart - start) / 1000 / 60 / 60;
+        workHours = (lunchStart - start - minLunchDuration) / 1000 / 60 / 60;
       } else if (parsedTimes.length === 1) {
-        workHours = (now - start) / 1000 / 60 / 60;
+        workHours = (now - start - minLunchDuration) / 1000 / 60 / 60;
       }
 
-      const fullDay = 8;
+      const fullDay = 8.5;
       const remaining = fullDay - workHours;
       
       const percent = Math.min(100, (workHours / fullDay) * 100);
