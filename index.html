@@ -155,7 +155,7 @@
     // --- REGISTRA ORARIO ---
     recordBtn.addEventListener("click", () => {
       const now = new Date();
-      times.push(now.toISOString());
+      times.push(Date.now());
       localStorage.setItem("workTimes", JSON.stringify(times));
       updateUI();
     });
@@ -228,7 +228,7 @@
         return { workHours: 0, remaining: 8 };
       }
 
-      const parsedTimes = times.map((t) => new Date(t));
+      const parsedTimes = times.map((t) => new Date(Number(t)));;
       let workHours = 0;
 
       const start = parsedTimes[0];
