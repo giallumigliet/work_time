@@ -168,7 +168,7 @@
     updateUI();
     startLiveTimer();
 
-    // --- REGISTER TIME ---
+    // --- Event Listener: REGISTER TIME button ---
     recordBtn.addEventListener("click", () => {
       const now = new Date();
       times.push(Date.now());
@@ -176,7 +176,7 @@
       updateUI();
     });
 
-    // --- UNDO LAST REGISTERED TIME ---
+    // --- Event Listener: UNDO button ---
     undoBtn.addEventListener("click", () => {
       if (times.length === 0) return;
       if (confirm("Press OK to delete last registered time.")) {
@@ -186,7 +186,7 @@
       }
     });
 
-    // --- FULL RESET ---
+    // --- Event Listener: RESET DAY button ---
     resetBtn.addEventListener("click", () => {
       if (confirm("Press OK to reset the day.")) {
         times = [];
@@ -200,8 +200,9 @@
       }
     });
 
-    // --- UI UPDATE ---
+    // --- function: UI UPDATE ---
     function updateUI() {
+      // --- registered time list ---
       list.innerHTML = "";
       times.forEach((t, i) => {
         const li = document.createElement("li");
@@ -211,7 +212,7 @@
         list.appendChild(li);
       });
 
-      // --- LUNCH TIMER HANDLER ---
+      // --- lunch timer text ---
       clearInterval(lunchInterval);
       if (times.length === 2) {
         const lunchStart = new Date(times[1]);
@@ -228,7 +229,7 @@
       }
     }
 
-    // --- TIME FORMAT (hours and minutes) ---
+    // --- function: TIME FORMATTING (hours and minutes) ---
     function formatHours(hoursFloat) {
       const totalMinutes = Math.abs(hoursFloat * 60);
       const h = Math.floor(totalMinutes / 60);
@@ -236,7 +237,7 @@
       return `${h} h ${m} min`;
     }
 
-    // --- WORK TIME COMPUTATION ---
+    // --- function: WORK TIME COMPUTATION ---
     function calculateWorkTime() {
       if (times.length < 1) {
         timeInfo.textContent = "PRESS the button to register the time";
@@ -305,7 +306,7 @@
       return { workHours, remaining };
     }
 
-    // --- LIVE TIMER and PROGRESS BAR ---
+    // --- function: LIVE TIMER and PROGRESS BAR handler ---
     function startLiveTimer() {
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
