@@ -49,15 +49,10 @@ During the day:
 
 ## 💾 How to use
 
-### 🔹 Option 1 – Run locally
-1. Download the file `index.html`.  
-2. Open it directly in your browser (Chrome, Edge, Firefox, etc.).  
-3. Everything runs locally — no server or installation needed.
-
-### 🔹 Option 2 – Publish with GitHub Pages
-1. Upload this file to a GitHub repository (e.g. `work_timer`).  
-2. Go to **Settings → Pages → Source → select “main branch” → Save**.  
-3. After a few minutes, your app will be live at: https://yourusername.github.io/work_timer/
+1. Remember or save the link https://giallumigliet.github.io/work_timer/.  
+2. Open the link in your browser.  
+3. You can close and re-open the page as many times as you want, your time data will stay there (data are stored locally in your browser).
+4. ENJOY!
 
 ## ✨ Author
 
