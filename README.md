@@ -51,7 +51,7 @@ During the day:
 
 1. Remember or save the link https://giallumigliet.github.io/work_timer/.  
 2. Open the link in your browser.  
-3. You can close and re-open the page as many times as you want, your time data will stay there (data are stored locally in your browser).
+3. You can close and re-open the page or browser as many times as you want, your time data will stay there (data are stored locally in your browser).
 4. ENJOY!
 
 ## ✨ Author
