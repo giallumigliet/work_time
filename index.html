@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
+
+  <!--  head containing: encoding UTF-8, responsive viewport, title, CSS (definining graphic style for the elements of the page)  -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -106,7 +108,6 @@
       font-size: 18px;
       color: #4da6ff;
     }
-    /* --- NEW lunch timer --- */
     #lunch-timer {
       margin-top: 10px;
       font-size: 16px;
@@ -115,6 +116,8 @@
     }
   </style>
 </head>
+
+  <!--  body containing: definition of the elements of the page, the JaveScript code (the app logic)  -->
 <body>
   <h1>WORK TIMER</h1>
   <div id="button-footer">
@@ -143,7 +146,7 @@
   </div>
 
   <div id="live-timer"></div>
-  <!-- NEW lunch break timer -->
+  
   <div id="lunch-timer"></div>
 
   <script>
@@ -154,18 +157,18 @@
     const timeInfo = document.getElementById("time-info");
     const progressBar = document.getElementById("progress-bar");
     const liveTimer = document.getElementById("live-timer");
-    const lunchTimer = document.getElementById("lunch-timer"); // NEW
+    const lunchTimer = document.getElementById("lunch-timer"); 
 
     const labels = ["ENTRY", "START LUNCH BREAK", "STOP LUNCH BREAK", "EXIT"];
 
     let times = JSON.parse(localStorage.getItem("workTimes")) || [];
     let timerInterval;
-    let lunchInterval; // NEW
+    let lunchInterval;
 
     updateUI();
     startLiveTimer();
 
-    // --- REGISTRA ORARIO ---
+    // --- REGISTER TIME ---
     recordBtn.addEventListener("click", () => {
       const now = new Date();
       times.push(Date.now());
@@ -173,7 +176,7 @@
       updateUI();
     });
 
-    // --- ANNULLA ULTIMO ORARIO ---
+    // --- UNDO LAST REGISTERED TIME ---
     undoBtn.addEventListener("click", () => {
       if (times.length === 0) return;
       if (confirm("Press OK to delete last registered time.")) {
@@ -183,21 +186,21 @@
       }
     });
 
-    // --- RESET COMPLETO ---
+    // --- FULL RESET ---
     resetBtn.addEventListener("click", () => {
       if (confirm("Press OK to reset the day.")) {
         times = [];
         localStorage.removeItem("workTimes");
         clearInterval(timerInterval);
-        clearInterval(lunchInterval); // NEW
+        clearInterval(lunchInterval); 
         liveTimer.textContent = "";
-        lunchTimer.textContent = ""; // NEW
+        lunchTimer.textContent = "";
         updateUI();
         startLiveTimer();
       }
     });
 
-    // --- AGGIORNA UI ---
+    // --- UI UPDATE ---
     function updateUI() {
       list.innerHTML = "";
       times.forEach((t, i) => {
@@ -208,7 +211,7 @@
         list.appendChild(li);
       });
 
-      // NEW — handle lunch timer start/stop
+      // --- LUNCH TIMER HANDLER ---
       clearInterval(lunchInterval);
       if (times.length === 2) {
         const lunchStart = new Date(times[1]);
@@ -225,7 +228,7 @@
       }
     }
 
-    // --- FORMATTATORE TEMPO (ore e minuti) ---
+    // --- TIME FORMAT (hours and minutes) ---
     function formatHours(hoursFloat) {
       const totalMinutes = Math.abs(hoursFloat * 60);
       const h = Math.floor(totalMinutes / 60);
@@ -233,7 +236,7 @@
       return `${h} h ${m} min`;
     }
 
-    // --- CALCOLA TEMPO LAVORATO ---
+    // --- WORK TIME COMPUTATION ---
     function calculateWorkTime() {
       if (times.length < 1) {
         timeInfo.textContent = "PRESS the button to register the time";
@@ -302,7 +305,7 @@
       return { workHours, remaining };
     }
 
-    // --- TIMER LIVE E PROGRESS BAR ---
+    // --- LIVE TIMER and PROGRESS BAR ---
     function startLiveTimer() {
       clearInterval(timerInterval);
       timerInterval = setInterval(() => {
